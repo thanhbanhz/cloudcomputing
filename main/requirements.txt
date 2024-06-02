@@ -1,0 +1,9 @@
+fastapi
+torch
+torchvision
+imageio
+Pillow
+uvicorn
+mysql-connector-python 
+pandas
+ultralytics

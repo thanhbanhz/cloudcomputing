@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login and Sign Up</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .container {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 300px;
+        text-align: center;
+    }
+    h2 {
+        color: #333;
+    }
+    form {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+    }
+    form.active {
+        display: flex;
+    }
+    input {
+        margin: 10px 0;
+        padding: 10px;
+        width: 100%;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    button {
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    button:hover {
+        background-color: #218838;
+    }
+    .toggle {
+        margin-top: 10px;
+        color: #007bff;
+        cursor: pointer;
+    }
+    .toggle:hover {
+        text-decoration: underline;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2 id="formTitle">Login</h2>
+    <form id="loginForm" class="active">
+        <input type="text" id="loginUsername" placeholder="Username" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button onclick="dangnhap()">Login</button>
+        <p class="toggle" onclick="toggleForm()">Don't have an account? Sign up</p>
+    </form>
+    <form id="signupForm">
+        <input type="text" id="signupUsername" placeholder="Username" required>
+        <input type="password" id="signupPassword" placeholder="Password" required>
+        <button onclick="signup()">Sign Up</button>
+        <p class="toggle" onclick="toggleForm()">Already have an account? Login</p>
+    </form>
+</div>
+
+<script>
+    var endpoint = window.location.origin + "/check_login"
+    var endpoint_signup = window.location.origin + "/signup"
+    function signup(){
+        var tk_gia_tri = document.getElementById("signupUsername").value;
+        var mk_gia_tri = document.getElementById("signupPassword").value;
+        fetch(endpoint_signup, {
+            method: "POST",
+            body: JSON.stringify({
+                tk: tk_gia_tri,
+                mk: mk_gia_tri
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+        .then((response) => response.json())
+        .then(response => {
+            if (response.error) {
+                document.getElementById('errorOutput').textContent = response.error;
+            } else {
+                if (response.data =="cut"){
+                    
+                }
+                else{
+                    window.location.href = window.location.origin
+                }
+            }
+        })
+        .catch(error => {
+            document.getElementById('errorOutput').textContent = 'An error occurred: ' + error.message;
+        });
+    }
+    function dangnhap(){
+        var tk_gia_tri = document.getElementById("loginUsername").value;
+        var mk_gia_tri = document.getElementById("loginPassword").value;
+        fetch(endpoint, {
+            method: "POST",
+            body: JSON.stringify({
+                tk: tk_gia_tri,
+                mk: mk_gia_tri
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+        .then((response) => response.json())
+        .then(response => {
+            if (response.error) {
+                document.getElementById('errorOutput').textContent = response.error;
+            } else {
+                if (response.data =="cut"){
+                    
+                }
+                else{
+                    window.location.href = window.location.origin+"/home"
+                }
+            }
+        })
+        .catch(error => {
+            document.getElementById('errorOutput').textContent = 'An error occurred: ' + error.message;
+        });
+    }
+    function toggleForm() {
+        var loginForm = document.getElementById('loginForm');
+        var signupForm = document.getElementById('signupForm');
+        var formTitle = document.getElementById('formTitle');
+
+        if (loginForm.classList.contains('active')) {
+            loginForm.classList.remove('active');
+            signupForm.classList.add('active');
+            formTitle.textContent = 'Sign Up';
+        } else {
+            loginForm.classList.add('active');
+            signupForm.classList.remove('active');
+            formTitle.textContent = 'Login';
+           
+        }
+    }
+</script>
+
+</body>
+</html>
